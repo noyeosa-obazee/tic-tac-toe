@@ -12,8 +12,13 @@
 </head>
 <body>
     <div class="container">
-        <h2>Which are you?</h2>
-        <div class="button-arranger"><button class="x-button">x</button> or <button class="o-button">o</button></div>
+        <label for="player-one">Player 1 Name:</label>
+        <input id="player-one">
+        <label for="player-two">Player 2 Name:</label>
+        <input id="player-two">
+        <div class="button-arranger"><span class="x-player">Player 1: </span><button class="x-button">x</button><span class="o-player">Player 2: </span><button class="o-button">o</button>
+        </div>
+        <div><button class="start-game-btn">Start Game</button></div>
         <div class="game-board">
         <div class="game-square"></div>
         <div class="game-square"></div>

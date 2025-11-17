@@ -3,15 +3,22 @@ const domGameBoard = document.querySelector('.game-board')
 const xButton = document.querySelector('.x-button')
 const oButton = document.querySelector('.o-button')
 const pathChooser = document.querySelector('.button-arranger')
+const playerOne = document.querySelector('#player-one')
+const playerTwo = document.querySelector('#player-two')
+const xPlayer = document.querySelector('.x-player')
+const oPlayer = document.querySelector('.o-player')
+const startButton = document.querySelector('.start-game-btn')
 
 let ticTacArr = [[], 
                  [],
                  []]
+let pOneMarker = 'x'
+let pTwoMarker = 'o'
 
 function createPlayer (name) {
     let marker = ''
-    const playerSelections = []
-    const assignPlayerSelection = function () {
+    const selections = []
+    const assignSelection = function () {
 
     }
     let isPlayerTurn = false;
@@ -20,16 +27,60 @@ function createPlayer (name) {
         score++
     }
 
-    return { name, marker, playerSelections, assignPlayerSelection, score, increaseScore, isPlayerTurn }
+    return { name, marker, selections, assignSelection, score, increaseScore, isPlayerTurn }
 }
 
 xButton.addEventListener('click', function() {
-   
+if(xPlayer.textContent.includes('1')) {
+    xPlayer.textContent = 'Player 2: '
+    oPlayer.textContent = 'Player 1: '
+     pOneMarker = 'o'
+     pTwoMarker = 'x'
+}
+
+else {
+    xPlayer.textContent = 'Player 1: '
+    oPlayer.textContent = 'Player 2: '
+    pOneMarker = 'x'
+    pTwoMarker = 'o'
+}
 })
 
 oButton.addEventListener('click', function() {
-   
+  if(xPlayer.textContent.includes('1')) {
+    xPlayer.textContent = 'Player 2: '
+    oPlayer.textContent = 'Player 1: '
+}
+
+else {
+     xPlayer.textContent = 'Player 1: '
+    oPlayer.textContent = 'Player 2: '
+}
 })
+
+startButton.addEventListener('click', function () {
+    const player1 = createPlayer(playerOne.value)
+    const player2 = createPlayer(playerTwo.value)
+    player1.marker = pOneMarker
+    player2.marker = pTwoMarker
+    player1.isPlayerTurn = true
+    playGame(player1,player2)
+})
+
+function playGame(player, nextPlayer) {
+    for (let i = 0; i < gameSquares.length; i++) {
+        const square = gameSquares[i];
+        square.addEventListener('click', function () {
+            if(player.isPlayerTurn) player.selections[i] = player.marker
+            else nextPlayer.selections[i] = nextPlayer.marker
+            player.isPlayerTurn = !player.isPlayerTurn
+             console.log(player.selections)
+    console.log(nextPlayer.selections)
+        })
+    }
+   
+
+}
 
 function getGameResult(gameboard) {
     for(const arr of gameboard) {
