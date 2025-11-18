@@ -71,12 +71,16 @@ function playGame(player, nextPlayer) {
     for (let i = 0; i < gameSquares.length; i++) {
         const square = gameSquares[i];
         square.addEventListener('click', function () {
-            if(player.isPlayerTurn) player.selections[i] = player.marker
-            else nextPlayer.selections[i] = nextPlayer.marker
+            if(player.isPlayerTurn) {
+                if (!(i in nextPlayer.selections)) player.selections[i] = player.marker
+            }
+            else {
+                if(!(i in player.selections)) nextPlayer.selections[i] = nextPlayer.marker
+            }
             player.isPlayerTurn = !player.isPlayerTurn
              console.log(player.selections)
-    console.log(nextPlayer.selections)
-        })
+    console.log(nextPlayer.selections)}
+        )
     }
    
 
