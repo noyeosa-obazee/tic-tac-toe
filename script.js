@@ -70,9 +70,9 @@ function playGame(player, nextPlayer) {
     
     for (let i = 0; i < gameSquares.length; i++) {
         const square = gameSquares[i];
-
+ 
         square.addEventListener('click', function () {
-            if (!gameOver) {
+            if (!gameOver && !square.textContent) {
             if(player.isPlayerTurn) {
                 if (!(i in nextPlayer.selections) || !(nextPlayer.selections[i])) player.assignSelection(i, player.marker)
             }
@@ -81,15 +81,16 @@ function playGame(player, nextPlayer) {
             }
             player.isPlayerTurn = !player.isPlayerTurn
             gameResult.textContent = getGameResult(player.selections, nextPlayer.selections)
-             console.log(player.selections)
-    console.log(nextPlayer.selections)
 populateGameboard(player.selections, nextPlayer.selections)
+console.log(player.selections)
+console.log(nextPlayer.selections)
         }
 }
         )
     }
    
     }
+
 
 
 function populateGameboard(boardInstanceOne, boardInstanceTwo) {
@@ -116,8 +117,7 @@ function getGameResult(pOneBoard, pTwoBoard) {
     for(const arr of gameboard) {
         if(arr.every(e => e && (e === arr[0]))) return `${arr[0]} wins!`
     }
-console.log(gameArr)
-console.log(gameboard)
+
     const [arr1, arr2, arr3] = gameboard
     if ((arr1[0] && arr2[0] && arr3[0]) && arr1[0] === arr2[0] && arr2[0] === arr3[0])
         { message = `${arr1[0]} wins!` 
