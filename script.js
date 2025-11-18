@@ -139,7 +139,10 @@ function getGameResult(pOneBoard, pTwoBoard) {
         message = `${arr1[2]} wins!`
         gameOver = true
     }
-    // else return 'We have a tie!';
+    else if (gameArr.filter(element => element === 'x' || element === 'o').length === gameArr.length) {
+        message = 'We have a tie'
+        gameOver = true
+    }
 
     return message;
 }
