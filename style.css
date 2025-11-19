@@ -72,7 +72,7 @@ button {
     color: white;
 }
 
-.start-game-btn {
+.start-game-btn, .new-game-btn {
     padding: 15px;
     font-weight: bold;
     font-size: 1em;
@@ -80,4 +80,24 @@ button {
 
 .player-score-div {
     display: none;
+}
+
+.p-one-score, .p-two-score {
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.new-game-btn {
+    display: none;
+}
+
+.error {
+    display: none;
+    color: #dc2626;
+    font-size: 0.830em;
+}
+
+.game-result {
+    font-weight: bold;
+    font-size: 1.1em;
 }

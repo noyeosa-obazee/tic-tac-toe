@@ -12,13 +12,16 @@ const gameResult = document.querySelector('.game-result')
 const playerScoreContainer = document.querySelector('.player-score-div')
 const playerOneScore = document.querySelector('.p-one-score')
 const playerTwoScore = document.querySelector('.p-two-score')
+const newGameButton = document.querySelector('.new-game-btn')
+const error = document.querySelector('.error')
 
 let pOneMarker = 'x'
 let pTwoMarker = 'o'
 let gameOver = false
- let p1Score = 0
-    let p2Score = 0
-    
+let gameStart;
+let p1Score = 0
+let p2Score = 0
+
 function createPlayer (name) {
     let marker = ''
     const selections = []
@@ -38,6 +41,7 @@ function createPlayer (name) {
 }
 
 xButton.addEventListener('click', function() {
+    if(!gameStart) {
 if(xPlayer.textContent.includes('1')) {
     xPlayer.textContent = 'Player 2: '
     oPlayer.textContent = 'Player 1: '
@@ -51,9 +55,11 @@ else {
     pOneMarker = 'x'
     pTwoMarker = 'o'
 }
+}
 })
 
-oButton.addEventListener('click', function() {
+oButton.addEventListener('click', function() { 
+    if (!gameStart) {
   if(xPlayer.textContent.includes('1')) {
     xPlayer.textContent = 'Player 2: '
     oPlayer.textContent = 'Player 1: '
@@ -63,10 +69,17 @@ else {
      xPlayer.textContent = 'Player 1: '
     oPlayer.textContent = 'Player 2: '
 }
+    }
 })
 
 startButton.addEventListener('click', function () {
+    if ((playerOne.value.trim() !== '') && (playerTwo.value.trim() !== '')) {
+        error.style.display = 'none'
     if(startButton.textContent !== 'Restart Game') {
+        startButton.disabled = true
+        gameStart = true
+        playerOne.readOnly = true
+         playerTwo.readOnly = true
     const player1 = createPlayer(playerOne.value)
     const player2 = createPlayer(playerTwo.value)
     player1.marker = pOneMarker
@@ -76,15 +89,59 @@ startButton.addEventListener('click', function () {
 }
 
 else {
+    newGameButton.style.display = 'none'
     gameSquares.forEach(square => square.textContent = '')
     gameOver = false
-     const player1 = createPlayer(playerOne.value)
+    startButton.disabled = true
+    const player1 = createPlayer(playerOne.value)
     const player2 = createPlayer(playerTwo.value)
     player1.marker = pOneMarker
     player2.marker = pTwoMarker
     player1.isPlayerTurn = true
     playGame(player1,player2) 
 }
+
+    }
+
+    else {
+        if (playerOne.value.trim() === '' && playerTwo.value.trim() === '') {
+            error.style.display = 'inline'
+            error.textContent = 'Enter player names'
+            playerOne.focus()
+        }
+
+        else if (playerOne.value.trim() === '') {
+             error.style.display = 'inline'
+            error.textContent = 'Player 1 name cannot be empty'
+            playerOne.focus()
+        }
+
+        else {
+            error.style.display = 'inline'
+            error.textContent = 'Player 2 name cannot be empty'
+            playerTwo.focus()
+        }
+    }
+})
+
+newGameButton.addEventListener('click', function() {
+    gameSquares.forEach(square => square.textContent = '')
+    playerOne.readOnly = false
+    playerTwo.readOnly = false
+    playerOne.value = ''
+    playerTwo.value = ''
+    startButton.textContent = 'Start Game'
+    startButton.disabled = false
+    gameStart = false
+    newGameButton.style.display = 'none'
+    gameOver = false
+    p1Score = 0;
+    p2Score = 0;
+    playerScoreContainer.style.display = 'none'
+    gameResult.textContent = ''
+     xPlayer.textContent = 'Player 1: '
+    oPlayer.textContent = 'Player 2: '
+    playerOne.focus()
 })
 
 function playGame(player, nextPlayer) {
@@ -101,17 +158,18 @@ function playGame(player, nextPlayer) {
                 if(!(i in player.selections) || !(player.selections[i])) nextPlayer.assignSelection(i, nextPlayer.marker)
             }
             player.isPlayerTurn = !player.isPlayerTurn
-            gameResult.textContent = getGameResult(player.selections, nextPlayer.selections)
+            gameResult.textContent = (getGameResult(player.selections, nextPlayer.selections)[0] === player.marker ? 'Player 1 wins! ' : 
+            getGameResult(player.selections, nextPlayer.selections)[0] === nextPlayer.marker ? 'Player 2 wins!' : getGameResult(player.selections, nextPlayer.selections))
 populateGameboard(player.selections, nextPlayer.selections)
 if(gameResult.textContent) {
                 player.selections = []
                 nextPlayer.selections = []
                 playerScoreContainer.style.display = 'inline'
-                if (gameResult.textContent[0] === player.marker) {
+                if (gameResult.textContent.includes('1')) {
                     player.increaseScore()
                     p1Score += player.getScore()
                 }
-                    else if (gameResult.textContent[0] === nextPlayer.marker) {
+                    else if (gameResult.textContent.includes('2')) {
                         nextPlayer.increaseScore()
                         p2Score += nextPlayer.getScore()
                     }
@@ -158,33 +216,45 @@ function getGameResult(pOneBoard, pTwoBoard) {
         { message = `${arr1[0]} wins!` 
          gameOver = true
          startButton.textContent = 'Restart Game'
+          startButton.disabled = false
+          newGameButton.style.display = 'inline'
         }
     else if ((arr1[1] && arr2[1] && arr3[1]) && arr1[1] === arr2[1] && arr2[1] === arr3[1]){
          message = `${arr1[1]} wins!`
          gameOver = true
          startButton.textContent = 'Restart Game'
+          startButton.disabled = false
+           newGameButton.style.display = 'inline'
 
     }
     else if ((arr1[2] && arr2[2] && arr3[2]) && arr1[2] === arr2[2] && arr2[2] === arr3[2]) {
         message = `${arr1[2]} wins!`
         gameOver = true
         startButton.textContent = 'Restart Game'
+         startButton.disabled = false
+          newGameButton.style.display = 'inline'
     }
     else if ((arr1[0] && arr2[1] && arr3[2]) && arr1[0] === arr2[1] && arr2[1] === arr3[2]){
          message = `${arr1[0]} wins!`
          gameOver = true
          startButton.textContent = 'Restart Game'
+          startButton.disabled = false
+           newGameButton.style.display = 'inline'
 
         }
     else if ((arr1[2] && arr2[1] && arr3[0]) && arr1[2] === arr2[1] && arr2[1] === arr3[0]) {
         message = `${arr1[2]} wins!`
         gameOver = true
         startButton.textContent = 'Restart Game'
+         startButton.disabled = false
+          newGameButton.style.display = 'inline'
     }
     else if (gameArr.filter(element => element === 'x' || element === 'o').length === gameArr.length) {
         message = 'We have a tie'
         gameOver = true
         startButton.textContent = 'Restart Game'
+         startButton.disabled = false
+          newGameButton.style.display = 'inline'
     }
 
     return message;
