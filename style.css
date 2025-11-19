@@ -39,7 +39,6 @@ button {
 .game-board {
     display: grid;
     grid-template: 130px 130px 130px / 130px 130px 130px;
-    /* opacity: 0.1; */
     transition: all o.3s ease;
 }
 
@@ -82,7 +81,7 @@ button {
     display: none;
 }
 
-.p-one-score, .p-two-score {
+.score {
     font-weight: bold;
     font-size: 1.1em;
 }
@@ -100,4 +99,8 @@ button {
 .game-result {
     font-weight: bold;
     font-size: 1.1em;
+}
+
+.turn-display {
+    display: none;
 }
