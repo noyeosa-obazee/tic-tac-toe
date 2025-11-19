@@ -9,11 +9,16 @@ const xPlayer = document.querySelector('.x-player')
 const oPlayer = document.querySelector('.o-player')
 const startButton = document.querySelector('.start-game-btn')
 const gameResult = document.querySelector('.game-result')
+const playerScoreContainer = document.querySelector('.player-score-div')
+const playerOneScore = document.querySelector('.p-one-score')
+const playerTwoScore = document.querySelector('.p-two-score')
 
 let pOneMarker = 'x'
 let pTwoMarker = 'o'
 let gameOver = false
-
+ let p1Score = 0
+    let p2Score = 0
+    
 function createPlayer (name) {
     let marker = ''
     const selections = []
@@ -22,11 +27,14 @@ function createPlayer (name) {
     }
     let isPlayerTurn = false;
     let score = 0
-    const increaseScore = function () {
+    function getScore() {
+        return score
+    }
+    function increaseScore() {
         score++
     }
 
-    return { name, marker, selections, assignSelection, score, increaseScore, isPlayerTurn }
+    return { name, marker, selections, assignSelection, getScore, increaseScore, isPlayerTurn }
 }
 
 xButton.addEventListener('click', function() {
@@ -75,35 +83,12 @@ else {
     player1.marker = pOneMarker
     player2.marker = pTwoMarker
     player1.isPlayerTurn = true
-    playGameAgain(player1,player2) 
+    playGame(player1,player2) 
 }
 })
 
 function playGame(player, nextPlayer) {
-    for (let i = 0; i < gameSquares.length; i++) {
-        const square = gameSquares[i];
- 
-        square.addEventListener('click', function () {
-            if (!gameOver && !square.textContent && startButton.textContent !== 'Restart Game') {
-            if(player.isPlayerTurn) {
-                if (!(i in nextPlayer.selections) || !(nextPlayer.selections[i])) player.assignSelection(i, player.marker)
-            }
-            else {
-                if(!(i in player.selections) || !(player.selections[i])) nextPlayer.assignSelection(i, nextPlayer.marker)
-            }
-            player.isPlayerTurn = !player.isPlayerTurn
-            gameResult.textContent = getGameResult(player.selections, nextPlayer.selections)
-populateGameboard(player.selections, nextPlayer.selections)
-        }
-
-}
-        )
-    }
    
-    }
-
-
-function playGameAgain(player, nextPlayer) {
     for (let i = 0; i < gameSquares.length; i++) {
         const square = gameSquares[i];
  
@@ -117,11 +102,21 @@ function playGameAgain(player, nextPlayer) {
             }
             player.isPlayerTurn = !player.isPlayerTurn
             gameResult.textContent = getGameResult(player.selections, nextPlayer.selections)
-            
 populateGameboard(player.selections, nextPlayer.selections)
 if(gameResult.textContent) {
                 player.selections = []
                 nextPlayer.selections = []
+                playerScoreContainer.style.display = 'inline'
+                if (gameResult.textContent[0] === player.marker) {
+                    player.increaseScore()
+                    p1Score += player.getScore()
+                }
+                    else if (gameResult.textContent[0] === nextPlayer.marker) {
+                        nextPlayer.increaseScore()
+                        p2Score += nextPlayer.getScore()
+                    }
+                playerOneScore.textContent = p1Score
+                playerTwoScore.textContent = p2Score
             }
         }
 
@@ -130,6 +125,8 @@ if(gameResult.textContent) {
     }
    
     }
+
+
 
 
 function populateGameboard(boardInstanceOne, boardInstanceTwo) {
